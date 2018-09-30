@@ -37,7 +37,11 @@ Complete la tabla:
 
 ## Discusión
 
-Describa los resultados obtenidos. En el caso de anti-aliasing describir las técnicas exploradas, citando las referencias.
+## Referencias
+- https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
+- http://www.dma.fi.upm.es/personal/mabellanas/tfcs/kirkpatrick/Aplicacion/algoritmos.htm#kirkpatrick
+- https://www.youtube.com/watch?v=GvLEAHRmPl0
+- https://www.youtube.com/watch?v=C_yh7gw7tbg
 
 ## Entrega
 
