@@ -16,14 +16,16 @@ int n = 4;
 // 2. Hints
 boolean triangleHint = true;
 boolean gridHint = true;
-boolean debug = true;
+boolean debug = false;
 
 // 3. Use FX2D, JAVA2D, P2D or P3D
 String renderer = P3D;
 
+float scale = 0;
+
 void setup() {
   //use 2^n to change the dimensions
-  size(1024, 1024, renderer);
+  size(500, 500, renderer);
   scene = new Scene(this);
   if (scene.is3D())
     scene.setType(Scene.Type.ORTHOGRAPHIC);
@@ -42,7 +44,7 @@ void setup() {
   // world system.
   spinningTask = new TimingTask() {
     @Override
-    public void execute() {
+      public void execute() {
       scene.eye().orbit(scene.is2D() ? new Vector(0, 0, 1) :
         yDirection ? new Vector(0, 1, 0) : new Vector(1, 0, 0), PI / 100);
     }
@@ -51,7 +53,7 @@ void setup() {
 
   frame = new Frame();
   frame.setScaling(width/pow(2, n));
-
+  scale = width/pow(2, n);
   // init the triangle that's gonna be rasterized
   randomizeTriangle();
 }
@@ -71,18 +73,101 @@ void draw() {
   popMatrix();
 }
 
+
 // Implement this function to rasterize the triangle.
 // Coordinates are given in the frame system which has a dimension of 2^n
 void triangleRaster() {
-  // frame.location converts points from world to frame
+  // frame.location converts from world to frame
   // here we convert v1 to illustrate the idea
+  float x1 = frame.location(v1).x();
+  float x2 = frame.location(v2).x();
+  float x3 = frame.location(v3).x();
+  float y1 = frame.location(v1).y();
+  float y2 = frame.location(v2).y();
+  float y3 = frame.location(v3).y();
+  float centerx = (x3+x2+x1)/3; 
+  float centery = (y3+y2+y1)/3;
+  float distmax= max((sqrt(pow((centerx-x1),2)+pow((centery-y1),2))),(sqrt(pow((centerx-x2),2)+pow((centery-y1),2))),(sqrt(pow((centerx-x1),2)+pow((centery-y1),2))));
+  
   if (debug) {
+    gridHint = true;
+    triangleHint = true;
+    stroke(0, 255, 0);  
+    point(x1, y1);
+  
+    stroke(0, 0, 255);
+    point(x2, y2);
+    stroke(255, 0, 0);
+    point(x3, y3);
+  }else{
+    gridHint = false;
+    triangleHint = false;
     pushStyle();
-    stroke(255, 255, 0, 125);
-    point(round(frame.location(v1).x()), round(frame.location(v1).y()));
+    // punto que se encuentra en el medio (baricentro)
+    //stroke(255);
+    //point(round( (centerx)), round(centery));
+    strokeWeight(0);
+    fill(255, 0, 255);
+    //subdivision del antialiasing 
+    int antialiasing = 16;
+    for (int x = -height/2; x < height; x++) {
+      for (int y = -width/2; y < width; y++) {
+        //se definen los colores del respectivo triangulo
+        float color1 = 0;
+        float color2 = 0;
+        float color3 = 0;
+        float shade= 0;
+        for (float i = 0; i<1; i+=(float)1/antialiasing) {
+          for (float j = 0; j<1; j+=(float)1/antialiasing) {
+  
+            float a, b, c;
+            a = oriented(x1, x2, x+i+1/antialiasing/2, y1, y2, y+i+1/antialiasing/2);
+            b = oriented(x2, x3, x+i+1/antialiasing/2, y2, y3, y+i+1/antialiasing/2);
+            c = oriented(x3, x1, x+i+1/antialiasing/2, y3, y1, y+i+1/antialiasing/2);
+            if (edgeFunction(v1, v2, v3) == true) {
+  
+              if (a < 0 && b < 0 && c < 0) {
+                color1+=a*255/(a+b+c)/(pow(antialiasing, 2));
+                color2+=b*255/(a+b+c)/(pow(antialiasing, 2));
+                color3+=c*255/(a+b+c)/(pow(antialiasing, 2));
+                shade=(sqrt(pow((x-centerx),2)+ pow((y-centery),2))*255)/distmax/(0.9*antialiasing);
+                float alpha=(color(round(color1), round(color2), round(color3), shade));
+                fill(color(round(color1), round(color2), round(color3), round(shade)));
+                rect(x, y, 1, 1);
+                //println("color ["+color1+", "+color2+ " ,"+ color3+ "] alpha "+ shade );
+              }
+            } else {
+              if (a >= 0 && b >= 0 && c >= 0) {
+                color1+=a*255/(a+b+c)/(pow(antialiasing, 2));
+                color2+=b*255/(a+b+c)/(pow(antialiasing, 2));
+                color3+=c*255/(a+b+c)/(pow(antialiasing, 2));
+                shade=(sqrt(pow((x-centerx),2)+ pow((y-centery),2))*255)/distmax/(0.9*antialiasing);
+                float alpha=(color(round(color1), round(color2), round(color3), shade));
+                fill(color(round(color1), round(color2), round(color3), round(shade)));
+                rect(x, y, 1, 1);
+                //println("color ["+color1+", "+color2+ " ,"+ color3+ "] alpha "+ shade );
+              }
+            }
+          }
+        }
+      }
+    }
     popStyle();
+    //println(alpha(get(int(centerx),int(centery))));
   }
+  
 }
+
+// true implica que es negativo=menor, false que es positivo=mayor
+// 
+boolean edgeFunction(Vector a, Vector b, Vector c) {
+  return ((c.x() - a.x()) * (b.y() - a.y()) - (c.y() - a.y()) * (b.x() - a.x()) >= 0);
+}
+float oriented(float x1, float x2, float x3, float y1, float y2, float y3) {
+  return (x1 - x3)*(y2 - y3) - (y1 - y3)*(x2 - x3);
+}
+
+
 
 void randomizeTriangle() {
   int low = -width/2;
@@ -115,10 +200,12 @@ void keyPressed() {
     debug = !debug;
   if (key == '+') {
     n = n < 7 ? n+1 : 2;
+    scale = width/pow(2, n);
     frame.setScaling(width/pow( 2, n));
   }
   if (key == '-') {
     n = n >2 ? n-1 : 7;
+    scale = width/pow(2, n);
     frame.setScaling(width/pow( 2, n));
   }
   if (key == 'r')
@@ -128,6 +215,6 @@ void keyPressed() {
       spinningTask.stop();
     else
       spinningTask.run(20);
-  if (key == 'y')
+  if (key == 'y')  
     yDirection = !yDirection;
 }
