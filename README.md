@@ -31,7 +31,9 @@ Complete la tabla:
 
 | Integrante | github nick |
 |------------|-------------|
-|            |             |
+|      Sergio Alexander Gil Medina    |      sagilm       |
+|      John Alexander Hernandez Carrero      |      joahernandezca       |
+|      David Felipe Rodriguez Rodriguez      |      daferodriguez       |
 
 ## Discusión
 
