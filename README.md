@@ -46,6 +46,10 @@ Con anti Aliasing:
 
 ![alt text](https://github.com/Daferodriguez/Raster_ws/blob/master/AntiAliasing.JPG)
 
+Sin anti Aliasing:
+
+![alt text](https://github.com/Daferodriguez/Raster_ws/blob/master/noAntiAliasing.JPG)
+
 ## Referencias
 - https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 - http://www.dma.fi.upm.es/personal/mabellanas/tfcs/kirkpatrick/Aplicacion/algoritmos.htm#kirkpatrick
