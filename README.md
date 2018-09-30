@@ -36,6 +36,15 @@ Complete la tabla:
 |      David Felipe Rodriguez Rodriguez      |      daferodriguez       |
 
 ## Discusión
+Se usaron algoritmos de orientacion para determinar el color que representa cada uno de los vertices del triángulo, y la distancia desde los vertices para determinar el color de cada uno de los pixeles que conforman el interior del triángulo.
+
+El antialiasing se realiza determinando de forma más precisa el rango de color que se usa, coloreando con un rango menor aquellos pixeles que se encuentran más proximos a las aristas del triángulo.
+
+El antialiasing puede visualizarse mejor si se presiona la tecla 'a' en la ejecución.
+
+Con anti Aliasing:
+
+![alt text](https://github.com/Daferodriguez/Raster_ws/blob/master/AntiAliasing.JPG)
 
 ## Referencias
 - https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
