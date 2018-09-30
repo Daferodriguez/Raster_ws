@@ -17,6 +17,7 @@ int n = 4;
 boolean triangleHint = true;
 boolean gridHint = true;
 boolean debug = false;
+boolean antialiasing = false;
 
 // 3. Use FX2D, JAVA2D, P2D or P3D
 String renderer = P3D;
@@ -100,60 +101,111 @@ void triangleRaster() {
     stroke(255, 0, 0);
     point(x3, y3);
   }else{
-    gridHint = false;
-    triangleHint = false;
-    pushStyle();
-    // punto que se encuentra en el medio (baricentro)
-    //stroke(255);
-    //point(round( (centerx)), round(centery));
-    strokeWeight(0);
-    fill(255, 0, 255);
-    //subdivision del antialiasing 
-    int antialiasing = 16;
-    for (int x = -height/2; x < height; x++) {
-      for (int y = -width/2; y < width; y++) {
-        //se definen los colores del respectivo triangulo
-        float color1 = 0;
-        float color2 = 0;
-        float color3 = 0;
-        float shade= 0;
-        for (float i = 0; i<1; i+=(float)1/antialiasing) {
-          for (float j = 0; j<1; j+=(float)1/antialiasing) {
-  
-            float a, b, c;
-            a = oriented(x1, x2, x+i+1/antialiasing/2, y1, y2, y+i+1/antialiasing/2);
-            b = oriented(x2, x3, x+i+1/antialiasing/2, y2, y3, y+i+1/antialiasing/2);
-            c = oriented(x3, x1, x+i+1/antialiasing/2, y3, y1, y+i+1/antialiasing/2);
-            if (edgeFunction(v1, v2, v3) == true) {
-  
-              if (a < 0 && b < 0 && c < 0) {
-                color1+=a*255/(a+b+c)/(pow(antialiasing, 2));
-                color2+=b*255/(a+b+c)/(pow(antialiasing, 2));
-                color3+=c*255/(a+b+c)/(pow(antialiasing, 2));
-                shade=(sqrt(pow((x-centerx),2)+ pow((y-centery),2))*255)/distmax/(0.9*antialiasing);
-                float alpha=(color(round(color1), round(color2), round(color3), shade));
-                fill(color(round(color1), round(color2), round(color3), round(shade)));
-                rect(x, y, 1, 1);
-                //println("color ["+color1+", "+color2+ " ,"+ color3+ "] alpha "+ shade );
-              }
-            } else {
-              if (a >= 0 && b >= 0 && c >= 0) {
-                color1+=a*255/(a+b+c)/(pow(antialiasing, 2));
-                color2+=b*255/(a+b+c)/(pow(antialiasing, 2));
-                color3+=c*255/(a+b+c)/(pow(antialiasing, 2));
-                shade=(sqrt(pow((x-centerx),2)+ pow((y-centery),2))*255)/distmax/(0.9*antialiasing);
-                float alpha=(color(round(color1), round(color2), round(color3), shade));
-                fill(color(round(color1), round(color2), round(color3), round(shade)));
-                rect(x, y, 1, 1);
-                //println("color ["+color1+", "+color2+ " ,"+ color3+ "] alpha "+ shade );
+    if(antialiasing){
+      pushStyle();
+      // punto que se encuentra en el medio (baricentro)
+      //stroke(255);
+      //point(round( (centerx)), round(centery));
+      strokeWeight(0);
+      fill(255, 0, 255);
+      //subdivision del antialiasing 
+      int antialiasing = 16;
+      for (int x = -height/2; x < height; x++) {
+        for (int y = -width/2; y < width; y++) {
+          //se definen los colores del respectivo triangulo
+          float color1 = 0;
+          float color2 = 0;
+          float color3 = 0;
+          float shade= 0;
+          for (float i = 0; i<1; i+=(float)1/antialiasing) {
+            for (float j = 0; j<1; j+=(float)1/antialiasing) {
+    
+              float a, b, c;
+              a = oriented(x1, x2, x+i+1/antialiasing/2, y1, y2, y+i+1/antialiasing/2);
+              b = oriented(x2, x3, x+i+1/antialiasing/2, y2, y3, y+i+1/antialiasing/2);
+              c = oriented(x3, x1, x+i+1/antialiasing/2, y3, y1, y+i+1/antialiasing/2);
+              if (edgeFunction(v1, v2, v3) == true) {
+    
+                if (a < 0 && b < 0 && c < 0) {
+                  color1+=a*255/(a+b+c)/(pow(antialiasing, 2));
+                  color2+=b*255/(a+b+c)/(pow(antialiasing, 2));
+                  color3+=c*255/(a+b+c)/(pow(antialiasing, 2));
+                  shade=(sqrt(pow((x-centerx),2)+ pow((y-centery),2))*255)/distmax/(0.9*antialiasing);
+                  color alpha = color(round(color1), round(color2), round(color3), round(shade));
+                  fill(alpha);
+                  rect(x, y, 1, 1);
+                  //println("color ["+color1+", "+color2+ " ,"+ color3+ "] alpha "+ shade );
+                }
+              } else {
+                if (a >= 0 && b >= 0 && c >= 0) {
+                  color1+=a*255/(a+b+c)/(pow(antialiasing, 2));
+                  color2+=b*255/(a+b+c)/(pow(antialiasing, 2));
+                  color3+=c*255/(a+b+c)/(pow(antialiasing, 2));
+                  shade=(sqrt(pow((x-centerx),2)+ pow((y-centery),2))*255)/distmax/(0.9*antialiasing);
+                  color alpha = color(round(color1), round(color2), round(color3), round(shade));
+                  fill(alpha);
+                  rect(x, y, 1, 1);
+                  //println("color ["+color1+", "+color2+ " ,"+ color3+ "] alpha "+ shade );
+                }
               }
             }
           }
         }
       }
+      popStyle();
+      //println(alpha(get(int(centerx),int(centery))));
+    }else{
+      pushStyle();
+      // punto que se encuentra en el medio (baricentro)
+      //stroke(255);
+      //point(round( (centerx)), round(centery));
+      strokeWeight(0);
+      fill(255, 0, 255);
+      for (int x = -height/2; x < height; x++) {
+        for (int y = -width/2; y < width; y++) {
+          //se definen los colores del respectivo triangulo
+          float color1 = 0;
+          float color2 = 0;
+          float color3 = 0;
+          float shade= 0;
+          for (float i = 0; i<1; i+=1) {
+            for (float j = 0; j<1; j+=1) {
+    
+              float a, b, c;
+              a = oriented(x1, x2, x+i+1/2, y1, y2, y+i+1/2);
+              b = oriented(x2, x3, x+i+1/2, y2, y3, y+i+1/2);
+              c = oriented(x3, x1, x+i+1/2, y3, y1, y+i+1/2);
+              if (edgeFunction(v1, v2, v3) == true) {
+    
+                if (a < 0 && b < 0 && c < 0) {
+                  color1+=a*255/(a+b+c);
+                  color2+=b*255/(a+b+c);
+                  color3+=c*255/(a+b+c);
+                  shade=(sqrt(pow((x-centerx),2)+ pow((y-centery),2))*255)/distmax/(0.9);
+                  color alpha = color(round(color1), round(color2), round(color3), round(shade));
+                  fill(alpha);
+                  rect(x, y, 1, 1);
+                  //println("color ["+color1+", "+color2+ " ,"+ color3+ "] alpha "+ shade );
+                }
+              } else {
+                if (a >= 0 && b >= 0 && c >= 0) {
+                  color1+=a*255/(a+b+c);
+                  color2+=b*255/(a+b+c);
+                  color3+=c*255/(a+b+c);
+                  shade=(sqrt(pow((x-centerx),2)+ pow((y-centery),2))*255)/distmax/(0.9);
+                  color alpha = color(round(color1), round(color2), round(color3), round(shade));
+                  fill(alpha);
+                  rect(x, y, 1, 1);
+                  //println("color ["+color1+", "+color2+ " ,"+ color3+ "] alpha "+ shade );
+                }
+              }
+            }
+          }
+        }
+      }
+      popStyle();
+      //println(alpha(get(int(centerx),int(centery))));
     }
-    popStyle();
-    //println(alpha(get(int(centerx),int(centery))));
   }
   
 }
@@ -198,6 +250,8 @@ void keyPressed() {
     triangleHint = !triangleHint;
   if (key == 'd')
     debug = !debug;
+  if (key == 'a')
+    antialiasing = !antialiasing;
   if (key == '+') {
     n = n < 7 ? n+1 : 2;
     scale = width/pow(2, n);
