@@ -37,6 +37,16 @@ Complete la tabla:
 
 ## Discusión
 
+| Comando/Tecla | Accion |
+|------------|-------------|
+|    "a"     |      Activar o desactivar anti-aliasing       |
+|    "g"     |      Activar o desactivar grid       |
+|    "+" o "-"    |      Aumentar o disminuir tamaño del grid      |
+|    "r"     |      Volver a crear el triangulo      |
+|    "d"     |      Activar o desacticar modo "debug"      |
+|    "t"     |      Activar o desactivar lineas del triangulo      |
+|    "tecla espacio"    |      Gira verticalmente el espacio      |
+
 Para implementar el sombreado del color en el triángulo primero fue necesario usar   la fórmula que encontramos en la documentación para saber la orientación del triángulo, y con esto y la distancia relativa de los vértices se calculaba la tonalidad de cada pixel, en el caso del shading que se muestra hacia el centro se  calculó con base a la distancia relativa entre el punto y el baricentro haciendo una modificación del alpha.
 
 El antialiasing se generó por medio de la técnica de subsampling y se tomó cada pixel en áreas más pequeñas para dar un mejor cálculo en la tonalidad. 
