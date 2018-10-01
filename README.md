@@ -36,11 +36,12 @@ Complete la tabla:
 |      David Felipe Rodriguez Rodriguez      |      daferodriguez       |
 
 ## Discusión
-Se usaron algoritmos de orientacion para determinar el color que representa cada uno de los vertices del triángulo, y la distancia desde los vertices para determinar el color de cada uno de los pixeles que conforman el interior del triángulo.
 
-El antialiasing se realiza determinando de forma más precisa el rango de color que se usa, coloreando con un rango menor aquellos pixeles que se encuentran más proximos a las aristas del triángulo.
+Para implementar el sombreado del color en el triángulo primero fue necesario usar   la fórmula que encontramos en la documentación para saber la orientación del triángulo, y con esto y la distancia relativa de los vértices se calculaba la tonalidad de cada pixel, en el caso del shading que se muestra hacia el centro se  calculó con base a la distancia relativa entre el punto y el baricentro haciendo una modificación del alpha.
 
-El antialiasing puede visualizarse mejor si se presiona la tecla 'a' en la ejecución.
+El antialiasing se generó por medio de la técnica de subsampling y se tomó cada pixel en áreas más pequeñas para dar un mejor cálculo en la tonalidad. 
+
+El antialiasingse puede visualizar  'a' en la ejecución.
 
 Con anti Aliasing:
 
